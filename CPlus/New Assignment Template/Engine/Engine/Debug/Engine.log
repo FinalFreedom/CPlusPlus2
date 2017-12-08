@@ -1,0 +1,7 @@
+﻿  graphicsclass.cpp
+d:\users\oliver\documents\university\year 2\c++\cplus\new assignment template\engine\engine\graphicsclass.cpp(65): warning C4316: 'D3DClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\university\year 2\c++\cplus\new assignment template\engine\engine\graphicsclass.cpp(121): warning C4316: 'CameraClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\university\year 2\c++\cplus\new assignment template\engine\engine\graphicsclass.cpp(414): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\users\oliver\documents\university\year 2\c++\cplus\new assignment template\engine\engine\graphicsclass.cpp(415): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  Engine.vcxproj -> D:\Users\Oliver\Documents\University\Year 2\C++\CPlus\New Assignment Template\Engine\Debug\Engine.exe
+  Engine.vcxproj -> D:\Users\Oliver\Documents\University\Year 2\C++\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)
