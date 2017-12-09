@@ -6,6 +6,10 @@
 
 GraphicsClass::GraphicsClass()
 {
+	startWarp = false;
+
+	mouseX = 0;
+	mouseY = 0;
 	m_Input = 0;
 	m_D3D = 0;
 	m_Timer = 0;
@@ -13,22 +17,18 @@ GraphicsClass::GraphicsClass()
 	m_Light = 0;
 	m_Position = 0;
 	m_Camera = 0;
-	//Background Moon
-	m_Model1 = 0;
-	//Deathstar
-	m_Model2 = 0;
-	//Clockwise Ship
-	m_Model3 = 0;
-	//Anticlockwise Ship
-	m_Model4 = 0;
-	//Background Planet
-	m_Model5 = 0;
-	//Background Sky
-	m_Model6 = 0;
-	//Passing Ship
-	m_Model7 = 0;
-	//Moon Satellite
-	m_Model8 = 0;
+
+	//Rendered objects
+	m_MoonOrbit = 0;
+	m_DeathStar = 0;
+	m_CWShipOrbit = 0;
+	m_ACWShipOrbit = 0;
+	m_PlanetOrbit = 0;
+	m_SpaceSphere = 0;
+	m_WarpShip1 = 0;
+	m_WarpShip2 = 0;
+	m_MoonSat = 0;
+	m_OddOrbit = 0;
 }
 
 
@@ -45,7 +45,6 @@ GraphicsClass::~GraphicsClass()
 bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
 	bool result;
-
 	// Create the input object.  The input object will be used to handle reading the keyboard and mouse input from the user.
 	m_Input = new InputClass;
 	if (!m_Input)
@@ -125,7 +124,7 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	// Set the initial position of the camera.
-	//m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// Create the light object.
 	m_Light = new LightClass;
@@ -142,14 +141,14 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	m_Light->SetSpecularPower(64.0f);
 
 	// Create the model object.
-	m_Model1 = new ModelClass;
-	if(!m_Model1)
+	m_MoonOrbit = new ModelClass;
+	if(!m_MoonOrbit)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model1->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/stone.dds");
+	result = m_MoonOrbit->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/marble.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the first model object.", L"Error", MB_OK);
@@ -157,14 +156,14 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	// Create the second model object.
-	m_Model2 = new ModelClass;
-	if(!m_Model2)
+	m_DeathStar = new ModelClass;
+	if(!m_DeathStar)
 	{
 		return false;
 	}
 
 	// Initialize the second model object.
-	result = m_Model2->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/deathstar.dds");
+	result = m_DeathStar->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/deathstar.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the second model object.", L"Error", MB_OK);
@@ -172,15 +171,15 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	// Create the third bump model object for models with normal maps and related vectors.
-	m_Model3 = new BumpModelClass;
-	if(!m_Model3)
+	m_CWShipOrbit = new BumpModelClass;
+	if(!m_CWShipOrbit)
 	{
 		return false;
 	}
 
 	// Initialize the bump model object.
-	result = m_Model3->Initialize(m_D3D->GetDevice(), "../Engine/data/viper.txt", L"../Engine/data/metal.dds", 
-								  L"../Engine/data/metal.dds");
+	result = m_CWShipOrbit->Initialize(m_D3D->GetDevice(), "../Engine/data/viper.txt", L"../Engine/data/stone.dds", 
+								  L"../Engine/data/normal.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the third model object.", L"Error", MB_OK);
@@ -188,14 +187,14 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	//Create fourth bump model
-	m_Model4 = new BumpModelClass;
-	if (!m_Model4)
+	m_ACWShipOrbit = new BumpModelClass;
+	if (!m_ACWShipOrbit)
 	{
 		return false;
 	}
 
 	// Initialize the bump model object.
-	result = m_Model4->Initialize(m_D3D->GetDevice(), "../Engine/data/viper.txt", L"../Engine/data/marble.dds",
+	result = m_ACWShipOrbit->Initialize(m_D3D->GetDevice(), "../Engine/data/viper.txt", L"../Engine/data/metal.dds",
 		L"../Engine/data/stone.dds");
 	if (!result)
 	{
@@ -203,55 +202,79 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 		return false;
 	}
 	//Create the 5th model object
-	m_Model5 = new ModelClass;
-	if (!m_Model5)
+	m_PlanetOrbit = new ModelClass;
+	if (!m_PlanetOrbit)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model5->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/marble.dds");
+	result = m_PlanetOrbit->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/plainworld.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the fifth model object.", L"Error", MB_OK);
 		return false;
 	}
 	//Create the 6th model object
-	m_Model6 = new ModelClass;
-	if (!m_Model6)
+	m_SpaceSphere = new ModelClass;
+	if (!m_SpaceSphere)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model6->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/metal.dds");
+	result = m_SpaceSphere->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/stars6.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the sixth model object.", L"Error", MB_OK);
 		return false;
 	}
-	m_Model7 = new ModelClass;
-	if (!m_Model7)
+	m_WarpShip1 = new ModelClass;
+	if (!m_WarpShip1)
+	{
+		return false;
+	}
+	m_WarpShip2 = new ModelClass;
+	if (!m_WarpShip2)
+	{
+		return false;
+	}
+	m_OddOrbit = new ModelClass;
+	if (!m_OddOrbit)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model7->Initialize(m_D3D->GetDevice(), "../Engine/data/viper.txt", L"../Engine/data/metal.dds");
+	result = m_OddOrbit->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/stone.dds");
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the fifth model object.", L"Error", MB_OK);
+		return false;
+	}
+	// Initialize the model object.
+	result = m_WarpShip1->Initialize(m_D3D->GetDevice(), "../Engine/data/xwing2.txt", L"../Engine/data/stone.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the seventh model object.", L"Error", MB_OK);
 		return false;
 	}
 
-	m_Model8 = new ModelClass;
-	if (!m_Model8)
+	result = m_WarpShip2->Initialize(m_D3D->GetDevice(), "../Engine/data/xwing2.txt", L"../Engine/data/marble.dds");
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the seventh model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	m_MoonSat = new ModelClass;
+	if (!m_MoonSat)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model8->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/stone.dds");
+	result = m_MoonSat->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/marble.dds");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the eigth model object.", L"Error", MB_OK);
@@ -264,55 +287,67 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 void GraphicsClass::Shutdown()
 {
 	// Release the model objects.
-	if(m_Model1)
+	if(m_MoonOrbit)
 	{
-		m_Model1->Shutdown();
-		delete m_Model1;
-		m_Model1 = 0;
+		m_MoonOrbit->Shutdown();
+		delete m_MoonOrbit;
+		m_MoonOrbit = 0;
 	}
 
-	if(m_Model2)
+	if(m_DeathStar)
 	{
-		m_Model2->Shutdown();
-		delete m_Model2;
-		m_Model2 = 0;
+		m_DeathStar->Shutdown();
+		delete m_DeathStar;
+		m_DeathStar = 0;
 	}
 
-	if(m_Model3)
+	if(m_CWShipOrbit)
 	{
-		m_Model3->Shutdown();
-		delete m_Model3;
-		m_Model3 = 0;
+		m_CWShipOrbit->Shutdown();
+		delete m_CWShipOrbit;
+		m_CWShipOrbit = 0;
 	}
-	if (m_Model4)
+	if (m_ACWShipOrbit)
 	{
-		m_Model4->Shutdown();
-		delete m_Model4;
-		m_Model4 = 0;
+		m_ACWShipOrbit->Shutdown();
+		delete m_ACWShipOrbit;
+		m_ACWShipOrbit = 0;
 	}
-	if (m_Model5)
+	if (m_PlanetOrbit)
 	{
-		m_Model5->Shutdown();
-		delete m_Model5;
-		m_Model5 = 0;
+		m_PlanetOrbit->Shutdown();
+		delete m_PlanetOrbit;
+		m_PlanetOrbit = 0;
 	}
-	if (m_Model6)
+	if (m_SpaceSphere)
 	{
-		m_Model6->Shutdown();
-		delete m_Model6;
-		m_Model6 = 0;
+		m_SpaceSphere->Shutdown();
+		delete m_SpaceSphere;
+		m_SpaceSphere = 0;
 	}
-	if (m_Model7)
+	if (m_WarpShip1)
 	{
-		m_Model7->Shutdown();
-		delete m_Model7;
-		m_Model7 = 0;
+		m_WarpShip1->Shutdown();
+		delete m_WarpShip1;
+		m_WarpShip1 = 0;
 	}
-	if (m_Model8)
+	if (m_WarpShip2)
 	{
-		m_Model8->Shutdown();
-		delete m_Model8;
-		m_Model8 = 0;
+		m_WarpShip2->Shutdown();
+		delete m_WarpShip2;
+		m_WarpShip2 = 0;
+	}
+	if (m_MoonSat)
+	{
+		m_MoonSat->Shutdown();
+		delete m_MoonSat;
+		m_MoonSat = 0;
+	}
+	if (m_OddOrbit)
+	{
+		m_OddOrbit->Shutdown();
+		delete m_OddOrbit;
+		m_OddOrbit = 0;
 	}
 	// Release the light object.
 	if(m_Light)
@@ -411,38 +446,44 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 {
 	bool keyDown;
 	float posX, posY, posZ, rotX, rotY, rotZ;
-	float mouseH = m_Input->getMouseDeltaX();
-	float mouseV = m_Input->getMouseDeltaY();
 	//rotX += mouseV;
 	//rotY += mouseH;
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(frameTime);
 
 	// Handle the input.
-	keyDown = m_Input->IsLeftPressed();
+	keyDown = m_Input->IsAPressed();
 	m_Position->TurnLeft(keyDown);
 
-	keyDown = m_Input->IsRightPressed();
+	keyDown = m_Input->IsDPressed();
 	m_Position->TurnRight(keyDown);
 
-	keyDown = m_Input->IsUpPressed();
+	keyDown = m_Input->IsWPressed();
 	m_Position->MoveForward(keyDown);
 
-	keyDown = m_Input->IsDownPressed();
+	keyDown = m_Input->IsSPressed();
 	m_Position->MoveBackward(keyDown);
 
-	keyDown = m_Input->IsAPressed();
+	keyDown = m_Input->IsSpacePressed();
 	m_Position->MoveUpward(keyDown);
 
-	keyDown = m_Input->IsZPressed();
+	keyDown = m_Input->IsLShiftPressed();
 	m_Position->MoveDownward(keyDown);
 
 	keyDown = m_Input->IsPgUpPressed();
 	m_Position->LookUpward(keyDown);
 
+	mouseY = m_Input->getMouseDeltaY();
+	mouseX = m_Input->getMouseDeltaX();
+
 	keyDown = m_Input->IsPgDownPressed();
 	m_Position->LookDownward(keyDown);
 
+	keyDown = m_Input->IsEPressed();
+	if (keyDown)
+	{
+		startWarp = true;
+	}
 	// Get the view point position/rotation.
 	m_Position->GetPosition(posX, posY, posZ);
 	m_Position->GetRotation(rotX, rotY, rotZ);
@@ -461,8 +502,29 @@ bool GraphicsClass::Render()
 
 	static float rotation = 0.0f;
 
+
+	static float trigger = 0.0f;
+	static float pressed = 0.0f;
+
 	// Update the rotation variable each frame.
 	rotation += (float)XM_PI * 0.0005f * m_Timer->GetTime();
+
+	if (m_Input->IsQPressed())
+	{
+		pressed += (float)XM_PI * 0.0005f * m_Timer->GetTime();
+	}
+
+	//There is a SLIGHT jump in the animation as the ship re-enters the scene to stationary
+	if (tan(trigger / 2 - 150) <= 0.001 && tan(trigger / 2 - 150) >= -0.001)
+	{
+		startWarp = false;
+		trigger = 0;
+	}
+	//trigger only updates while the warp effect is wanted
+	if (startWarp)
+	{
+		trigger += (float)XM_PI * 0.0005f * m_Timer->GetTime();
+	}
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -479,13 +541,13 @@ bool GraphicsClass::Render()
 	worldMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
 	worldMatrix *= XMMatrixRotationZ(rotation/2);
 	worldMatrix *= XMMatrixRotationX(rotation/2);
-	translateMatrix = XMMatrixTranslation(((cos(rotation/4) * 20)-(sin(rotation/2)*4)), 5.0f, (sin(rotation/4)*20)-(cos(rotation/2)*4));
+	translateMatrix = XMMatrixTranslation(((cos(rotation/4) * 20)-(sin(rotation/2)*8)), 5.0f, (sin(rotation/4)*20)-(cos(rotation/2)*7));
 	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
 
 	// Render the first model using the texture shader.
-	m_Model1->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-												  m_Model1->GetTexture());
+	m_MoonOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_MoonOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+												  m_MoonOrbit->GetTexture());
 	if(!result)
 	{
 		return false;
@@ -494,16 +556,17 @@ bool GraphicsClass::Render()
 	// Setup the rotation and translation of the second model. Foreground Planet Death Star
 	m_D3D->GetWorldMatrix(worldMatrix);
 
-	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(1.0f, 1.0f, 1.0f));
-	worldMatrix *= XMMatrixRotationX(64);
-	worldMatrix *= XMMatrixRotationY(rotation);
+	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(2.0f, 2.0f, 2.0f));
+	worldMatrix *= XMMatrixRotationX(-30);
+	worldMatrix *= XMMatrixRotationY(rotation/4+pressed/4);
+	worldMatrix *= XMMatrixTranslation(0.0f, sin(rotation)/4, 0.0f);
 
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 
 	// Render the second model using the light shader.
-	m_Model2->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderLightShader(m_D3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-									   m_Model2->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
+	m_DeathStar->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderLightShader(m_D3D->GetDeviceContext(), m_DeathStar->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+									   m_DeathStar->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
 									   m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if(!result)
 	{
@@ -518,13 +581,13 @@ bool GraphicsClass::Render()
 	worldMatrix *= XMMatrixRotationY(90-rotation);
 	worldMatrix *= XMMatrixRotationZ(sin(90-rotation));
 	worldMatrix *= XMMatrixRotationX(-cos(90-rotation));
-	translateMatrix = XMMatrixTranslation(cos(rotation) * 6,0.5f, sin(rotation) * 6);
+	translateMatrix = XMMatrixTranslation(cos(rotation) * 5,0.5f, sin(rotation) * 5);
 	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
 
 	// Render the third model using the bump map shader. ACW Orbiting ship
-	m_Model3->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_Model3->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-												  m_Model3->GetColorTexture(), m_Model3->GetNormalMapTexture(), m_Light->GetDirection(), 
+	m_CWShipOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_CWShipOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+												  m_CWShipOrbit->GetColorTexture(), m_CWShipOrbit->GetNormalMapTexture(), m_Light->GetDirection(), 
 												  m_Light->GetDiffuseColor());
 	if(!result)
 	{
@@ -532,43 +595,42 @@ bool GraphicsClass::Render()
 	}
 
 	//Set up fourth model Close orbiting ship
-	m_Model4->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_Model4->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model4->GetColorTexture(), m_Model4->GetNormalMapTexture(), m_Light->GetDirection(),
+	m_ACWShipOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_ACWShipOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_ACWShipOrbit->GetColorTexture(), m_ACWShipOrbit->GetNormalMapTexture(), m_Light->GetDirection(),
 		m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
 	}
-	//Model4 positions
+	//ACWShipOrbit positions
 	m_D3D->GetWorldMatrix(worldMatrix);
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f));
-	worldMatrix *= XMMatrixRotationY(2*rotation);
-	worldMatrix *= XMMatrixRotationZ(-sin(2*rotation));
-	worldMatrix *= XMMatrixRotationX(cos(2*rotation));
-	translateMatrix = XMMatrixTranslation(-sin(2 * rotation)*4,-0.5f, -cos(2 * rotation)*4);
+	worldMatrix *= XMMatrixRotationY(rotation/2);
+	worldMatrix *= XMMatrixRotationZ(-sin(rotation/2));
+	worldMatrix *= XMMatrixRotationX(cos(rotation/2));
+	translateMatrix = XMMatrixTranslation(-sin(rotation/2)*8,-0.5f, -cos(rotation/2)*8);
 	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
 
 	// Render the fourth model using the bump map shader. CW Orbiting Ship
-	m_Model4->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_Model4->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model4->GetColorTexture(), m_Model4->GetNormalMapTexture(), m_Light->GetDirection(),
+	m_ACWShipOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderBumpMapShader(m_D3D->GetDeviceContext(), m_ACWShipOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_ACWShipOrbit->GetColorTexture(), m_ACWShipOrbit->GetNormalMapTexture(), m_Light->GetDirection(),
 		m_Light->GetDiffuseColor());
 
 	// Setup the rotation and translation of the fifth model. Background Planet
 	m_D3D->GetWorldMatrix(worldMatrix);
 
-	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(1.0f, 1.0f, 1.0f));
-
-	worldMatrix *= XMMatrixRotationZ(rotation);
+	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(2.50f, 2.50f, 2.50f));
+	worldMatrix *= XMMatrixRotationX(90);
 	worldMatrix *= XMMatrixRotationY(rotation);
 
 	worldMatrix *= XMMatrixTranslation((cos(rotation / 4) * 20), 5.0f, (sin(rotation / 4) * 20));
 
 	// Render the fifth model using the texture shader. Background Planet
-	m_Model5->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_Model5->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model5->GetTexture());
+	m_PlanetOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_PlanetOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_PlanetOrbit->GetTexture());
 	if (!result)
 	{
 		return false;
@@ -583,9 +645,9 @@ bool GraphicsClass::Render()
 	worldMatrix *= XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
 	// Render the sixth model using the texture shader. Star skysphere
-	m_Model6->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_Model6->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model6->GetTexture());
+	m_SpaceSphere->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_SpaceSphere->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_SpaceSphere->GetTexture());
 	if (!result)
 	{
 		return false;
@@ -594,28 +656,68 @@ bool GraphicsClass::Render()
 	// Setup the rotation and translation of the seventh model. Warping XWing
 	m_D3D->GetWorldMatrix(worldMatrix);
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(0.4f, 0.4f, 0.4f));
-	worldMatrix *= XMMatrixTranslation(-tan(rotation/2-150), 2.5f, 10.0f);
+	worldMatrix *= XMMatrixRotationZ(sin(rotation)/16);
+	worldMatrix *= XMMatrixRotationY(165);
+
+	worldMatrix *= XMMatrixTranslation(10- tan(trigger / 2 - 150), 2 + sin(-rotation) / 16, 10 + cos(rotation) / 32);
 	
-	// Render the sixth model using the texture shader. Warping XWing
-	m_Model7->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_Model7->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model7->GetTexture());
+	// Render the eigth model using the texture shader. Warping XWing
+	m_WarpShip1->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderLightShader(m_D3D->GetDeviceContext(), m_WarpShip1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_WarpShip1->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
 	{
 		return false;
 	}
 
-	// Setup the rotation and translation of the eigth model. Background Moon Satellite
-	worldMatrix = XMMatrixScaling(0.25f, 0.25f, 0.25f);
+	m_D3D->GetWorldMatrix(worldMatrix);
+	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(0.4f, 0.4f, 0.4f));
+	worldMatrix *= XMMatrixRotationZ(cos(rotation/2) / 16);
+	worldMatrix *= XMMatrixRotationY(165);
+
+	worldMatrix *= XMMatrixTranslation(11 - tan(trigger / 2 - 150)/2, 1 + sin(-rotation) / 32, 11 + cos(-rotation) / 16);
+
+	// Render the eigth model using the texture shader. Warping XWing
+	m_WarpShip2->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderLightShader(m_D3D->GetDeviceContext(), m_WarpShip2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_WarpShip2->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup the rotation and translation of the ninth model. Background Moon Satellite
+	worldMatrix = XMMatrixScaling(.25f, .25f, 0.25f);
 	worldMatrix *= XMMatrixRotationY(rotation / 4);
 	worldMatrix *= XMMatrixRotationZ(rotation / 4);
-	translateMatrix = XMMatrixTranslation(((cos(rotation / 4) * 20) - (sin(rotation / 2) * 4)), sin(rotation)+5, (sin(rotation / 4) * 20) - (cos(rotation / 2) * 4)-cos(rotation));
+	translateMatrix = XMMatrixTranslation(((cos(rotation / 4) * 20) - (sin(rotation / 2) * 8)+cos(rotation)*2), sin(rotation)+5,
+		(sin(rotation / 4) * 20) - (cos(rotation / 2) * 7)-cos(rotation));
 	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
 
-	// Render the eigth model using the texture shader. Background Moon Satellite
-	m_Model8->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_Model8->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model8->GetTexture());
+	// Render the ninth model using the texture shader. Background Moon Satellite
+	m_MoonSat->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_MoonSat->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_MoonSat->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup the rotation and translation of the ninth model. Background Planet
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(0.50f, 0.50f, 0.50f));
+	worldMatrix *= XMMatrixRotationX(90);
+	worldMatrix *= XMMatrixRotationY(rotation);
+
+	worldMatrix *= XMMatrixTranslation((cos(90+rotation / 4) * 20), sin(rotation/4)*10, (sin(90+rotation / 4) * 20));
+
+	// Render the fifth model using the texture shader. Background Planet
+	m_OddOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_OddOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_OddOrbit->GetTexture());
 	if (!result)
 	{
 		return false;

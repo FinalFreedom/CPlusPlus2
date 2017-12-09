@@ -49,6 +49,9 @@ private:
 	bool Render();
 
 private:
+	float mouseX;
+	float mouseY;
+	bool startWarp;
 	InputClass* m_Input;
 	D3DClass* m_D3D;
 	TimerClass* m_Timer;
@@ -56,14 +59,16 @@ private:
 	PositionClass* m_Position;
 	CameraClass* m_Camera;
 	LightClass* m_Light;
-	ModelClass* m_Model1;
-	ModelClass* m_Model2;
-	BumpModelClass* m_Model3;
-	BumpModelClass* m_Model4;
-	ModelClass* m_Model5;
-	ModelClass* m_Model6;
-	ModelClass* m_Model7;
-	ModelClass* m_Model8;
+	ModelClass* m_MoonOrbit;
+	ModelClass* m_DeathStar;
+	BumpModelClass* m_CWShipOrbit;
+	BumpModelClass* m_ACWShipOrbit;
+	ModelClass* m_PlanetOrbit;
+	ModelClass* m_SpaceSphere;
+	ModelClass* m_WarpShip1;
+	ModelClass* m_WarpShip2;
+	ModelClass* m_MoonSat;
+	ModelClass* m_OddOrbit;
 };
 
 #endif
