@@ -24,6 +24,8 @@ PositionClass::PositionClass()
 	m_rightTurnSpeed = 0.0f;
 	m_lookUpSpeed    = 0.0f;
 	m_lookDownSpeed  = 0.0f;
+	m_strafeLeftSpeed = 0.0f;
+	m_strafeRightSpeed = 0.0f;
 }
 
 
@@ -346,6 +348,62 @@ void PositionClass::LookDownward(bool keydown)
 	return;
 }
 
+void PositionClass::StrafeLeft(bool keydown)
+{
+	// Update the upward speed movement based on the frame time and whether the user is holding the key down or not.
+	if (keydown)
+	{
+		m_strafeLeftSpeed += m_frameTime * 0.003f;
+
+		if (m_strafeLeftSpeed > (m_frameTime * 0.03f))
+		{
+			m_strafeLeftSpeed = m_frameTime * 0.03f;
+		}
+	}
+	else
+	{
+		m_strafeLeftSpeed -= m_frameTime * 0.002f;
+
+		if (m_strafeLeftSpeed < 0.0f)
+		{
+			m_strafeLeftSpeed = 0.0f;
+		}
+	}
+
+	// Update the height position.
+	m_positionX -= m_strafeLeftSpeed;
+	CaptureCamera();
+	return;
+}
+
+void PositionClass::StrafeRight(bool keydown)
+{
+	// Update the upward speed movement based on the frame time and whether the user is holding the key down or not.
+	if (keydown)
+	{
+		m_strafeRightSpeed += m_frameTime * 0.003f;
+
+		if (m_strafeRightSpeed > (m_frameTime * 0.03f))
+		{
+			m_strafeRightSpeed = m_frameTime * 0.03f;
+		}
+	}
+	else
+	{
+		m_strafeRightSpeed -= m_frameTime * 0.002f;
+
+		if (m_strafeRightSpeed < 0.0f)
+		{
+			m_strafeRightSpeed = 0.0f;
+		}
+	}
+
+	// Update the height position.
+	m_positionX += m_strafeRightSpeed;
+	CaptureCamera();
+	return;
+}
+
 void PositionClass::CaptureCamera()
 {
 	float max = 30;
@@ -355,5 +413,54 @@ void PositionClass::CaptureCamera()
 		m_positionX = (m_positionX / mag)*max;
 		m_positionY = (m_positionY / mag)*max;
 		m_positionZ = (m_positionZ / mag)*max;
+	}
+}
+
+void PositionClass::MouseInput(int xMousePos, int yMousePos)
+{
+	if (xMousePos < 0)
+	{
+		xMousePos = fabsf(xMousePos);
+
+		m_leftTurnSpeed += xMousePos * 0.01f;
+
+		if (m_leftTurnSpeed > (xMousePos * 0.005f))
+		{
+			m_leftTurnSpeed = xMousePos * 0.005f;
+		}
+		xMousePos += m_rightTurnSpeed;
+	}
+	else if (xMousePos >= 0)
+	{
+		m_rightTurnSpeed += xMousePos * 0.01f;
+
+		if (m_rightTurnSpeed > (xMousePos * 0.005f))
+		{
+			m_rightTurnSpeed = xMousePos * 0.005f;
+		}
+		xMousePos += m_leftTurnSpeed;
+	}
+
+	if (yMousePos < 0)
+	{
+		yMousePos = fabsf(yMousePos);
+
+		m_lookUpSpeed += yMousePos * 0.01f;
+
+		if (m_lookUpSpeed > (yMousePos * 0.005f))
+		{
+			m_lookUpSpeed = yMousePos * 0.005f;
+		}
+		yMousePos += m_lookDownSpeed;
+	}
+	else if (yMousePos >= 0)
+	{
+		m_lookDownSpeed += yMousePos * 0.01f;
+
+		if (m_lookDownSpeed > (yMousePos * 0.005f))
+		{
+			m_lookDownSpeed = yMousePos * 0.005f;
+		}
+		yMousePos += m_lookUpSpeed;
 	}
 }

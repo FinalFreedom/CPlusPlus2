@@ -17,7 +17,8 @@
 #include "lightclass.h"
 #include "modelclass.h"
 #include "bumpmodelclass.h"
-
+#include "particleshaderclass.h"
+#include "particlesystemclass.h"
 
 /////////////
 // GLOBALS //
@@ -47,6 +48,8 @@ private:
 	//Xu
 	bool HandleMovementInput(float);
 	bool Render();
+	int xMouseDelta;
+	int yMouseDelta;
 
 private:
 	float mouseX;
@@ -69,6 +72,9 @@ private:
 	ModelClass* m_WarpShip2;
 	ModelClass* m_MoonSat;
 	ModelClass* m_OddOrbit;
+
+	ParticleShaderClass* m_ParticleShader;
+	particlesystemclass* m_ParticleSystem;
 };
 
 #endif

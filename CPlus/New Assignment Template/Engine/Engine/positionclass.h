@@ -38,6 +38,9 @@ public:
 	void LookUpward(bool);
 	void LookDownward(bool);
 	void CaptureCamera();
+	void MouseInput(int xMousePos, int yMousePos);
+	void StrafeLeft(bool);
+	void StrafeRight(bool);
 
 private:
 	float m_positionX, m_positionY, m_positionZ;
@@ -49,6 +52,7 @@ private:
 	float m_upwardSpeed, m_downwardSpeed;
 	float m_leftTurnSpeed, m_rightTurnSpeed;
 	float m_lookUpSpeed, m_lookDownSpeed;
+	float m_strafeLeftSpeed, m_strafeRightSpeed;
 };
 
 #endif

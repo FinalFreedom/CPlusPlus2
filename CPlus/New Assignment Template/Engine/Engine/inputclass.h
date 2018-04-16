@@ -41,10 +41,14 @@ public:
 	void GetMouseLocation(int&, int&);
 
 	bool IsEscapePressed();
-	bool IsAPressed();
-	bool IsDPressed();
+	bool IsUpPressed();
+	bool IsDownPressed();
+	bool IsLeftPressed();
+	bool IsRightPressed();
 	bool IsWPressed();
+	bool IsAPressed();
 	bool IsSPressed();
+	bool IsDPressed();
 	bool IsSpacePressed();
 	bool IsLShiftPressed();
 	bool IsPgUpPressed();
@@ -52,15 +56,6 @@ public:
 
 	bool IsEPressed();
 	bool IsQPressed();
-
-
-	int getMouseDeltaX();
-	int getMouseDeltaY();
-
-	bool isMouseUp();
-	bool isMouseDown();
-	bool isMouseLeft();
-	bool isMouseRight();
 
 private:
 	bool ReadKeyboard();

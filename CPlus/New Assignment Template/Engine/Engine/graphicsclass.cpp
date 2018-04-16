@@ -7,6 +7,9 @@
 GraphicsClass::GraphicsClass()
 {
 	startWarp = false;
+	xMouseDelta =0;
+	yMouseDelta =0;
+
 
 	mouseX = 0;
 	mouseY = 0;
@@ -19,16 +22,20 @@ GraphicsClass::GraphicsClass()
 	m_Camera = 0;
 
 	//Rendered objects
-	m_MoonOrbit = 0;
+
 	m_DeathStar = 0;
 	m_CWShipOrbit = 0;
 	m_ACWShipOrbit = 0;
 	m_PlanetOrbit = 0;
-	m_SpaceSphere = 0;
-	m_WarpShip1 = 0;
-	m_WarpShip2 = 0;
+	m_MoonOrbit = 0;
 	m_MoonSat = 0;
 	m_OddOrbit = 0;
+	m_WarpShip1 = 0;
+	m_WarpShip2 = 0;
+	m_SpaceSphere = 0;
+
+	m_ParticleShader = 0;
+	m_ParticleSystem = 0;
 }
 
 
@@ -280,6 +287,35 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 		MessageBox(hwnd, L"Could not initialize the eigth model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	// Create the particle shader object.
+	m_ParticleShader = new ParticleShaderClass;
+	if (!m_ParticleShader)
+	{
+		return false;
+	}
+
+	// Initialize the particle shader object.
+	result = m_ParticleShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the particle shader object.", L"Error", MB_OK);
+		return false;
+	}
+	// Create the particle system object.
+	m_ParticleSystem = new particlesystemclass;
+	if (!m_ParticleSystem)
+	{
+		return false;
+	}
+
+	// Initialize the particle system object.
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"../Engine/data/star.dds");
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -349,6 +385,22 @@ void GraphicsClass::Shutdown()
 		delete m_OddOrbit;
 		m_OddOrbit = 0;
 	}
+	// Release the particle system object.
+	if (m_ParticleSystem)
+	{
+		m_ParticleSystem->Shutdown();
+		delete m_ParticleSystem;
+		m_ParticleSystem = 0;
+	}
+
+	// Release the particle shader object.
+	if (m_ParticleShader)
+	{
+		m_ParticleShader->Shutdown();
+		delete m_ParticleShader;
+		m_ParticleShader = 0;
+	}
+
 	// Release the light object.
 	if(m_Light)
 	{
@@ -431,6 +483,8 @@ bool GraphicsClass::Frame()
 	{
 		return false;
 	}
+	// Run the frame processing for the particle system.
+	m_ParticleSystem->Frame(m_Timer->GetTime(), m_D3D->GetDeviceContext());
 
 	// Render the graphics.
 	result = Render();
@@ -446,17 +500,24 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 {
 	bool keyDown;
 	float posX, posY, posZ, rotX, rotY, rotZ;
-	//rotX += mouseV;
-	//rotY += mouseH;
+	int xMousePos;
+	int yMousePos;
+
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(frameTime);
 
 	// Handle the input.
-	keyDown = m_Input->IsAPressed();
+	keyDown = m_Input->IsLeftPressed();
 	m_Position->TurnLeft(keyDown);
 
-	keyDown = m_Input->IsDPressed();
+	keyDown = m_Input->IsRightPressed();
 	m_Position->TurnRight(keyDown);
+
+	keyDown = m_Input->IsAPressed();
+	m_Position->StrafeLeft(keyDown);
+
+	keyDown = m_Input->IsDPressed();
+	m_Position->StrafeRight(keyDown);
 
 	keyDown = m_Input->IsWPressed();
 	m_Position->MoveForward(keyDown);
@@ -473,9 +534,6 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 	keyDown = m_Input->IsPgUpPressed();
 	m_Position->LookUpward(keyDown);
 
-	mouseY = m_Input->getMouseDeltaY();
-	mouseX = m_Input->getMouseDeltaX();
-
 	keyDown = m_Input->IsPgDownPressed();
 	m_Position->LookDownward(keyDown);
 
@@ -484,6 +542,10 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 	{
 		startWarp = true;
 	}
+	m_Input->GetMouseLocation(xMousePos, yMousePos);
+	m_Position->MouseInput((xMousePos-xMouseDelta)*10, (yMousePos-yMouseDelta)*10);
+	xMouseDelta = xMousePos;
+	yMouseDelta = yMousePos;
 	// Get the view point position/rotation.
 	m_Position->GetPosition(posX, posY, posZ);
 	m_Position->GetRotation(rotX, rotY, rotZ);
@@ -722,6 +784,24 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
+	//PARTICLES
+	// Turn on alpha blending.
+	m_D3D->EnableAlphaBlending();
+
+	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the texture shader.
+	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_ParticleSystem->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Turn off alpha blending.
+	m_D3D->DisableAlphaBlending();
+
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 

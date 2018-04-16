@@ -66,7 +66,16 @@
     <ClInclude Include="timerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VehicleSpawner.h">
+    <ClInclude Include="PlanetSpawner.h">
+      <Filter>U1664298Added</Filter>
+    </ClInclude>
+    <ClInclude Include="particlesystemclass.h">
+      <Filter>U1664298Added</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="particleshaderclass.h">
       <Filter>U1664298Added</Filter>
     </ClInclude>
   </ItemGroup>
@@ -122,7 +131,13 @@
     <ClCompile Include="timerclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VehicleSpawner.cpp">
+    <ClCompile Include="PlanetSpawner.cpp">
+      <Filter>U1664298Added</Filter>
+    </ClCompile>
+    <ClCompile Include="particlesystemclass.cpp">
+      <Filter>U1664298Added</Filter>
+    </ClCompile>
+    <ClCompile Include="particleshaderclass.cpp">
       <Filter>U1664298Added</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,5 +161,16 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="ClassDiagram.cd" />
+    <None Include="particle.ps">
+      <Filter>U1664298Added</Filter>
+    </None>
+    <None Include="particle.vs">
+      <Filter>U1664298Added</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc">
+      <Filter>Shader Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

@@ -31,9 +31,9 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 
-	// Initialize the mouse at the centre of the screen.
-	m_mouseX = m_screenWidth/2;
-	m_mouseY = m_screenHeight/2;
+	// Initialize the mouse at the screen origin.
+	m_mouseX = 0;
+	m_mouseY = 0;
 
 	// Initialize the main direct input interface.
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
@@ -210,14 +210,9 @@ void InputClass::ProcessInput() //EDIT For mouse input
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	m_mouseX += m_mouseState.lX;
 	m_mouseY += m_mouseState.lY;
-
-	// Ensure the mouse location doesn't exceed the screen width or height.
-	if(m_mouseX < 0)  { m_mouseX = 0; }
-	if(m_mouseY < 0)  { m_mouseY = 0; }
-	
-	if(m_mouseX > m_screenWidth)  { m_mouseX = m_screenWidth; }
-	if(m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
-	
+	//if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
+	//if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
+	//SetCursorPos(m_screenHeight / 2, m_screenWidth / 2);
 	return;
 }
 
@@ -241,6 +236,49 @@ bool InputClass::IsEscapePressed()
 	return false;
 }
 
+bool InputClass::IsUpPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the key is currently being pressed.
+	if (m_keyboardState[DIK_UP] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsDownPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the key is currently being pressed.
+	if (m_keyboardState[DIK_DOWN] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsLeftPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the key is currently being pressed.
+	if (m_keyboardState[DIK_LEFT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsRightPressed()
+{
+	// Do a bitwise and on the keyboard state to check if the key is currently being pressed.
+	if (m_keyboardState[DIK_RIGHT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 bool InputClass::IsAPressed()
 {
@@ -352,36 +390,5 @@ bool InputClass::IsPgDownPressed()
 		return true;
 	}
 
-	return false;
-}
-
-int InputClass::getMouseDeltaX()
-{
-	int xPos = (m_screenWidth/2) - m_mouseX;
-	m_mouseX = m_screenWidth / 2;
-	return xPos;
-}
-
-int InputClass::getMouseDeltaY()
-{
-	int yPos = (m_screenHeight / 2) - m_mouseY;
-	m_mouseY = m_screenHeight / 2;
-	return yPos;
-}
-
-bool isMouseUp()
-{
-	return false;
-}
-bool isMouseDown()
-{
-	return false;
-}
-bool isMouseLeft()
-{
-	return false;
-}
-bool isMouseRight()
-{
 	return false;
 }
