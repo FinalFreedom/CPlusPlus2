@@ -1,1 +1,36 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.Cpp.Platform.targets(57,5): error MSB8020: The build tools for v141 (Platform Toolset = 'v141') cannot be found. To build using the v141 build tools, please install v141 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Retarget solution".
+﻿  PlanetSpawner.cpp
+  timerclass.cpp
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\timerclass.cpp(65): warning C4305: '-=': truncation from 'double' to 'float'
+  textureshaderclass.cpp
+  textureclass.cpp
+  systemclass.cpp
+  shadermanagerclass.cpp
+  positionclass.cpp
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(410): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(423): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(423): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(431): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(441): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(446): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(446): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(454): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(464): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  particlesystemclass.cpp
+  particleshaderclass.cpp
+  modelclass.cpp
+  main.cpp
+  lightshaderclass.cpp
+  lightclass.cpp
+  inputclass.cpp
+  graphicsclass.cpp
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(71): warning C4316: 'D3DClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(127): warning C4316: 'CameraClass': object allocated on the heap may not be aligned 16
+  DDSTextureLoader.cpp
+  d3dclass.cpp
+  cameraclass.cpp
+  bumpmodelclass.cpp
+  bumpmapshaderclass.cpp
+  Generating Code...
+TRACKER : error TRK0005: Failed to locate: "rc.exe". The system cannot find the file specified.
+  
+  
