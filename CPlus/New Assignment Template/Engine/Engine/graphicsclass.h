@@ -19,6 +19,7 @@
 #include "bumpmodelclass.h"
 #include "particleshaderclass.h"
 #include "particlesystemclass.h"
+#include "ReflectionShaderClass.h"
 
 /////////////
 // GLOBALS //

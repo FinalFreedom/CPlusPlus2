@@ -85,6 +85,7 @@ void PositionClass::SetFrameTime(float time)
 void PositionClass::MoveForward(bool keydown)
 {
 	float radians;
+	float zRadian;
 
 
 	// Update the forward speed movement based on the frame time and whether the user is holding the key down or not.
@@ -109,9 +110,10 @@ void PositionClass::MoveForward(bool keydown)
 
 	// Convert degrees to radians.
 	radians = m_rotationY * 0.0174532925f;
-
+	zRadian = m_rotationX * 0.0174532925f;
 	// Update the position.
-	m_positionX += sinf(radians) * m_forwardSpeed;
+	m_positionX += sinf(radians) * cosf(zRadian) * m_forwardSpeed;
+	m_positionY -= sin(zRadian) * m_forwardSpeed;
 	m_positionZ += cosf(radians) * m_forwardSpeed;
 	CaptureCamera();
 	return;
@@ -121,7 +123,7 @@ void PositionClass::MoveForward(bool keydown)
 void PositionClass::MoveBackward(bool keydown)
 {
 	float radians;
-
+	float zRadian;
 
 	// Update the backward speed movement based on the frame time and whether the user is holding the key down or not.
 	if(keydown)
@@ -145,10 +147,12 @@ void PositionClass::MoveBackward(bool keydown)
 
 	// Convert degrees to radians.
 	radians = m_rotationY * 0.0174532925f;
-
+	zRadian = m_rotationX * 0.0174532925f;
 	// Update the position.
-	m_positionX -= sinf(radians) * m_backwardSpeed;
+	m_positionX -= sinf(radians) * cosf(zRadian) * m_backwardSpeed;
+	m_positionY += sin(zRadian) * m_backwardSpeed;
 	m_positionZ -= cosf(radians) * m_backwardSpeed;
+
 	CaptureCamera();
 	return;
 }
@@ -350,6 +354,7 @@ void PositionClass::LookDownward(bool keydown)
 
 void PositionClass::StrafeLeft(bool keydown)
 {
+	float radians;
 	// Update the upward speed movement based on the frame time and whether the user is holding the key down or not.
 	if (keydown)
 	{
@@ -370,14 +375,18 @@ void PositionClass::StrafeLeft(bool keydown)
 		}
 	}
 
-	// Update the height position.
-	m_positionX -= m_strafeLeftSpeed;
+	radians = m_rotationY * 0.0174532925f;
+
+	// Update the position.
+	m_positionX -= cosf(radians) * m_strafeLeftSpeed;
+	m_positionZ += sinf(radians) * m_strafeLeftSpeed;
 	CaptureCamera();
 	return;
 }
 
 void PositionClass::StrafeRight(bool keydown)
 {
+	float radians;
 	// Update the upward speed movement based on the frame time and whether the user is holding the key down or not.
 	if (keydown)
 	{
@@ -398,8 +407,11 @@ void PositionClass::StrafeRight(bool keydown)
 		}
 	}
 
-	// Update the height position.
-	m_positionX += m_strafeRightSpeed;
+	radians = m_rotationY * 0.0174532925f;
+
+	// Update the position.
+	m_positionX += cosf(radians) * m_strafeRightSpeed;
+	m_positionZ -= sinf(radians) * m_strafeRightSpeed;
 	CaptureCamera();
 	return;
 }

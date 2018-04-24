@@ -1,2 +1,14 @@
-﻿  Engine.vcxproj -> H:\HGit\CPlusPlus2\CPlus\New Assignment Template\Engine\Debug\Engine.exe
-  Engine.vcxproj -> H:\HGit\CPlusPlus2\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)
+﻿  positionclass.cpp
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(116): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(153): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(422): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(435): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(435): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(443): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(453): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(458): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(458): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(466): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(476): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.exe
+  Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)

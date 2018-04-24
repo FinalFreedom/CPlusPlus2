@@ -78,6 +78,9 @@
     <ClInclude Include="particleshaderclass.h">
       <Filter>U1664298Added</Filter>
     </ClInclude>
+    <ClInclude Include="ReflectionShaderClass.h">
+      <Filter>U1664298Added</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bumpmapshaderclass.cpp">
@@ -140,6 +143,9 @@
     <ClCompile Include="particleshaderclass.cpp">
       <Filter>U1664298Added</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionShaderClass.cpp">
+      <Filter>U1664298Added</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="bumpmap.ps">
@@ -165,6 +171,12 @@
       <Filter>U1664298Added</Filter>
     </None>
     <None Include="particle.vs">
+      <Filter>U1664298Added</Filter>
+    </None>
+    <None Include="reflection.ps">
+      <Filter>U1664298Added</Filter>
+    </None>
+    <None Include="reflection.vs">
       <Filter>U1664298Added</Filter>
     </None>
   </ItemGroup>

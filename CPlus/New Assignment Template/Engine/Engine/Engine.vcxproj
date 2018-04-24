@@ -24,6 +24,7 @@
     <ClInclude Include="particleshaderclass.h" />
     <ClInclude Include="particlesystemclass.h" />
     <ClInclude Include="positionclass.h" />
+    <ClInclude Include="ReflectionShaderClass.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="systemclass.h" />
@@ -47,6 +48,7 @@
     <ClCompile Include="particleshaderclass.cpp" />
     <ClCompile Include="particlesystemclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="ReflectionShaderClass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
@@ -58,6 +60,8 @@
     <None Include="bumpmap.ps" />
     <None Include="bumpmap.vs" />
     <None Include="ClassDiagram.cd" />
+    <None Include="reflection.ps" />
+    <None Include="reflection.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="particle.ps" />
