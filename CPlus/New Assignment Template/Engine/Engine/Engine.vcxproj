@@ -25,6 +25,7 @@
     <ClInclude Include="particlesystemclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="ReflectionShaderClass.h" />
+    <ClInclude Include="RenderTextureClass.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="systemclass.h" />
@@ -49,6 +50,7 @@
     <ClCompile Include="particlesystemclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="ReflectionShaderClass.cpp" />
+    <ClCompile Include="RenderTextureClass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />

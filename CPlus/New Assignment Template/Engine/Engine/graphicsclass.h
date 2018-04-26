@@ -19,6 +19,7 @@
 #include "bumpmodelclass.h"
 #include "particleshaderclass.h"
 #include "particlesystemclass.h"
+#include "RenderTextureClass.h"
 #include "ReflectionShaderClass.h"
 
 /////////////
@@ -49,6 +50,7 @@ private:
 	//Xu
 	bool HandleMovementInput(float);
 	bool Render();
+	//bool RenderToTexture();
 	int xMouseDelta;
 	int yMouseDelta;
 
@@ -74,8 +76,12 @@ private:
 	ModelClass* m_MoonSat;
 	ModelClass* m_OddOrbit;
 
+	RenderTextureClass* m_RenderTexture;
+	TextureShaderClass* m_TextureShader;
+
 	ParticleShaderClass* m_ParticleShader;
 	particlesystemclass* m_ParticleSystem;
+	ReflectionShaderClass* m_ReflectionShader;
 };
 
 #endif

@@ -81,6 +81,9 @@
     <ClInclude Include="ReflectionShaderClass.h">
       <Filter>U1664298Added</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTextureClass.h">
+      <Filter>U1664298Added</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bumpmapshaderclass.cpp">
@@ -144,6 +147,9 @@
       <Filter>U1664298Added</Filter>
     </ClCompile>
     <ClCompile Include="ReflectionShaderClass.cpp">
+      <Filter>U1664298Added</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTextureClass.cpp">
       <Filter>U1664298Added</Filter>
     </ClCompile>
   </ItemGroup>

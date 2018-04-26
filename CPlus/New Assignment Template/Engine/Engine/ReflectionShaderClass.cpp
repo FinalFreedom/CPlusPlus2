@@ -49,9 +49,9 @@ void ReflectionShaderClass::Shutdown()
 	return;
 }
 
-bool ReflectionShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix,
-	XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture,
-	ID3D11ShaderResourceView* reflectionTexture, XMMATRIX reflectionMatrix)
+bool ReflectionShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount,const XMMATRIX &worldMatrix,
+	const XMMATRIX &viewMatrix,const XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture,
+	ID3D11ShaderResourceView* reflectionTexture,const XMMATRIX &reflectionMatrix)
 {
 	bool result;
 
@@ -317,9 +317,9 @@ void ReflectionShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 }
 
 
-bool ReflectionShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture,
-	ID3D11ShaderResourceView* reflectionTexture, XMMATRIX reflectionMatrix)
+bool ReflectionShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext,const XMMATRIX &worldMatrix,const XMMATRIX &viewMatrix,
+	const XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture,
+	ID3D11ShaderResourceView* reflectionTexture,const XMMATRIX &reflectionMatrix)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;

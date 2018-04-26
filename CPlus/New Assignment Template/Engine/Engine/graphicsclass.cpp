@@ -36,6 +36,9 @@ GraphicsClass::GraphicsClass()
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
+
+	m_RenderTexture = 0;
+	m_ReflectionShader = 0;
 }
 
 
@@ -146,6 +149,20 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(64.0f);
+
+	// Create the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+	if (!m_RenderTexture)
+	{
+		return false;
+	}
+
+	// Initialize the render to texture object.
+	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Create the model object.
 	m_MoonOrbit = new ModelClass;
@@ -316,12 +333,35 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 		return false;
 	}
 
+	// Create the reflection shader object.
+	m_ReflectionShader = new ReflectionShaderClass;
+	if (!m_ReflectionShader)
+	{
+		return false;
+	}
+
+	// Initialize the reflection shader object.
+	result = m_ReflectionShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the reflection shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	return true;
 }
 
 
 void GraphicsClass::Shutdown()
 {
+	// Release the reflection shader object.
+	if (m_ReflectionShader)
+	{
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
+	}
+
 	// Release the model objects.
 	if(m_MoonOrbit)
 	{
@@ -385,6 +425,15 @@ void GraphicsClass::Shutdown()
 		delete m_OddOrbit;
 		m_OddOrbit = 0;
 	}
+
+	// Release the texture shader object.
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
+	}
+
 	// Release the particle system object.
 	if (m_ParticleSystem)
 	{
@@ -556,6 +605,49 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 
 	return true;
 }
+
+/**bool GraphicsClass::RenderToTexture()
+{
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
+	static float rotation = 0.0f;
+
+
+	// Set the render target to be the render to texture.
+	m_RenderTexture->SetRenderTarget(m_D3D->GetDeviceContext(), m_D3D->GetDepthStencilView());
+
+	// Clear the render to texture.
+	m_RenderTexture->ClearRenderTarget(m_D3D->GetDeviceContext(), m_D3D->GetDepthStencilView(), 0.0f, 0.0f, 0.0f, 1.0f);
+	// Use the camera to calculate the reflection matrix.
+	m_Camera->RenderReflection(-1.5f);
+	// Get the camera reflection view matrix instead of the normal view matrix.
+	reflectionViewMatrix = m_Camera->GetReflectionViewMatrix(worldMatrix);
+
+	// Get the world and projection matrices.
+	m_D3D->GetWorldMatrix(worldMatrix);
+	m_D3D->GetProjectionMatrix(projectionMatrix);
+
+	// Update the rotation variable each frame.
+	rotation += (float)XM_PI * 0.005f;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+	D3DXMatrixRotationY(&worldMatrix, rotation);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the texture shader and the reflection view matrix.
+	m_TextureShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, reflectionViewMatrix,
+		projectionMatrix, m_Model->GetTexture());
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.
+	m_D3D->SetBackBufferRenderTarget();
+
+
+	return true;
+}**/
+
 
 bool GraphicsClass::Render()
 {

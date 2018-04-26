@@ -1,14 +1,10 @@
-﻿  positionclass.cpp
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(116): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(153): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(422): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(435): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(435): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(443): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(453): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(458): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(458): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(466): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\positionclass.cpp(476): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+﻿  systemclass.cpp
+  RenderTextureClass.cpp
+  main.cpp
+  graphicsclass.cpp
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(74): warning C4316: 'D3DClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(130): warning C4316: 'CameraClass': object allocated on the heap may not be aligned 16
+  Generating Code...
+bumpmapshaderclass.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
   Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.exe
   Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)
