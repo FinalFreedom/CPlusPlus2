@@ -12,6 +12,8 @@
 #include "textureshaderclass.h"
 #include "lightshaderclass.h"
 #include "bumpmapshaderclass.h"
+#include "fireshaderclass.h"
+#include "particleshaderclass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,11 +36,17 @@ public:
 
 	bool RenderBumpMapShader(ID3D11DeviceContext*, int, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&, ID3D11ShaderResourceView*,
 		ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4);
-
+	bool RenderFireShader(ID3D11DeviceContext*, int, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*,
+		ID3D11ShaderResourceView*, float, XMFLOAT3, XMFLOAT3, XMFLOAT2, XMFLOAT2, XMFLOAT2, float, float);
+	bool RenderParticleShader(ID3D11DeviceContext*, int, const XMMATRIX &, const XMMATRIX &,
+		const XMMATRIX &, ID3D11ShaderResourceView*);
 private:
 	TextureShaderClass* m_TextureShader;
 	LightShaderClass* m_LightShader;
 	BumpMapShaderClass* m_BumpMapShader;
+
+	FireShaderClass* m_FireShader;
+	ParticleShaderClass* m_ParticleShader;
 };
 
 #endif

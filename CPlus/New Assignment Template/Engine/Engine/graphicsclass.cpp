@@ -180,14 +180,15 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	// Create the second model object.
-	m_DeathStar = new ModelClass;
+	m_DeathStar = new FireModelClass;
 	if(!m_DeathStar)
 	{
 		return false;
 	}
 
 	// Initialize the second model object.
-	result = m_DeathStar->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/deathstar.dds");
+	result = m_DeathStar->Initialize(m_D3D->GetDevice(), "../Engine/data/planet.txt", L"../Engine/data/fire01.dds",
+		L"../Engine/data/noise01.dds", L"../Engine/data/alpha01.dds");;
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the second model object.", L"Error", MB_OK);
@@ -354,14 +355,6 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 
 void GraphicsClass::Shutdown()
 {
-	// Release the reflection shader object.
-	if (m_ReflectionShader)
-	{
-		m_ReflectionShader->Shutdown();
-		delete m_ReflectionShader;
-		m_ReflectionShader = 0;
-	}
-
 	// Release the model objects.
 	if(m_MoonOrbit)
 	{
@@ -433,7 +426,13 @@ void GraphicsClass::Shutdown()
 		delete m_TextureShader;
 		m_TextureShader = 0;
 	}
-
+	// Release the reflection shader object.
+	if (m_ReflectionShader)
+	{
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
+	}
 	// Release the particle system object.
 	if (m_ParticleSystem)
 	{
@@ -478,7 +477,7 @@ void GraphicsClass::Shutdown()
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
 	}
-
+	
 	// Release the timer object.
 	if (m_Timer)
 	{
@@ -632,7 +631,7 @@ bool GraphicsClass::HandleMovementInput(float frameTime) //INPUT
 	{
 		rotation -= 360.0f;
 	}
-	D3DXMatrixRotationY(&worldMatrix, rotation);
+	XMMatrixRotationY(&worldMatrix, rotation);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_D3D->GetDeviceContext());
@@ -653,6 +652,35 @@ bool GraphicsClass::Render()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, translateMatrix;
 	bool result;
+
+	//Variables for the fire 
+	XMFLOAT3 scrollSpeeds, scales;
+	XMFLOAT2 distortion1, distortion2, distortion3;
+	float distortionScale, distortionBias;
+	static float frameTime = 0.0f;
+
+
+	// Increment the frame time counter.
+	frameTime += 0.01f;
+	if (frameTime > 1000.0f)
+	{
+		frameTime = 0.0f;
+	}
+
+	// Set the three scrolling speeds for the three different noise textures.
+	scrollSpeeds = XMFLOAT3(1.3f, 2.1f, 2.3f);
+
+	// Set the three scales which will be used to create the three different noise octave textures.
+	scales = XMFLOAT3(1.0f, 2.0f, 3.0f);
+
+	// Set the three different x and y distortion factors for the three different noise textures.
+	distortion1 = XMFLOAT2(0.1f, 0.2f);
+	distortion2 = XMFLOAT2(0.1f, 0.3f);
+	distortion3 = XMFLOAT2(0.1f, 0.1f);
+
+	// The the scale and bias of the texture coordinate sampling perturbation.
+	distortionScale = 0.8f;
+	distortionBias = 0.5f;
 
 	static float rotation = 0.0f;
 
@@ -709,7 +737,8 @@ bool GraphicsClass::Render()
 
 	// Setup the rotation and translation of the second model. Foreground Planet Death Star
 	m_D3D->GetWorldMatrix(worldMatrix);
-
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_D3D->GetProjectionMatrix(projectionMatrix);
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(2.0f, 2.0f, 2.0f));
 	worldMatrix *= XMMatrixRotationX(-30);
 	worldMatrix *= XMMatrixRotationY(rotation/4+pressed/4);
@@ -717,15 +746,21 @@ bool GraphicsClass::Render()
 
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 
-	// Render the second model using the light shader.
+	// Turn on alpha blending.
+	m_D3D->EnableAlphaBlending();
+
+	// Put the square model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_DeathStar->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderLightShader(m_D3D->GetDeviceContext(), m_DeathStar->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-									   m_DeathStar->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), 
-									   m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-	if(!result)
+
+	// Render the square model using the fire shader.
+	result = m_ShaderManager->RenderFireShader(m_D3D->GetDeviceContext(), m_DeathStar->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_DeathStar->GetTexture1(), m_DeathStar->GetTexture2(), m_DeathStar->GetTexture3(), frameTime, scrollSpeeds,
+		scales, distortion1, distortion2, distortion3, distortionScale, distortionBias);
+	if (!result)
 	{
 		return false;
 	}
+	m_D3D->DisableAlphaBlending();
 
 	// Setup the rotation and translation of the third model. Far orbiting ship
 	m_D3D->GetWorldMatrix(worldMatrix);
@@ -876,7 +911,6 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
-	//PARTICLES
 	// Turn on alpha blending.
 	m_D3D->EnableAlphaBlending();
 

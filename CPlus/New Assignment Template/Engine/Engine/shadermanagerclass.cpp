@@ -9,6 +9,8 @@ ShaderManagerClass::ShaderManagerClass()
 	m_TextureShader = 0;
 	m_LightShader = 0;
 	m_BumpMapShader = 0;
+	m_FireShader = 0;
+	m_ParticleShader = 0;
 }
 
 
@@ -71,13 +73,50 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the bump map shader object.", L"Error", MB_OK);
 		return false;
 	}
+	// Create the Fire shader object.
+	m_FireShader = new FireShaderClass;
+	if (!m_FireShader)
+	{
+		return false;
+	}
 
+	// Initialize the bump map shader object.
+	result = m_FireShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Fire shader object.", L"Error", MB_OK);
+		return false;
+	}
+	m_ParticleShader = new ParticleShaderClass;
+	if (!m_ParticleShader)
+	{
+		return false;
+	}
+	result = m_ParticleShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the Particle shader object.", L"Error", MB_OK);
+		return false;
+	}
 	return true;
 }
 
 
 void ShaderManagerClass::Shutdown()
 {
+	if (m_ParticleShader)
+	{
+		m_ParticleShader->Shutdown();
+		delete m_ParticleShader;
+		m_ParticleShader = 0;
+	}
+	// Release the bump map shader object.
+	if (m_FireShader)
+	{
+		m_FireShader->Shutdown();
+		delete m_FireShader;
+		m_FireShader = 0;
+	}
 	// Release the bump map shader object.
 	if(m_BumpMapShader)
 	{
@@ -156,5 +195,38 @@ bool ShaderManagerClass::RenderBumpMapShader(ID3D11DeviceContext* deviceContext,
 		return false;
 	}
 
+	return true;
+}
+bool ShaderManagerClass::RenderFireShader(ID3D11DeviceContext* deviceContext, int indexCount, const XMMATRIX& worldMatrix, const XMMATRIX& viewMatrix,
+	const XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* fireTexture,
+	ID3D11ShaderResourceView* noiseTexture, ID3D11ShaderResourceView* alphaTexture, float frameTime,
+	XMFLOAT3 scrollSpeeds, XMFLOAT3 scales, XMFLOAT2 distortion1, XMFLOAT2 distortion2,
+	XMFLOAT2 distortion3, float distortionScale, float distortionBias)
+{
+	bool result;
+
+
+	// Render the model using the fire shader.
+	result = m_FireShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, fireTexture, noiseTexture, alphaTexture, frameTime, scrollSpeeds, scales, distortion1, distortion2,
+		distortion3, distortionScale, distortionBias);
+
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+bool ShaderManagerClass::RenderParticleShader(ID3D11DeviceContext* deviceContext, int indexCount, const XMMATRIX &worldMatrix, const XMMATRIX &viewMatrix,
+	const XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture)
+{
+	bool result;
+
+	result = m_ParticleShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture);
+
+	if (!result)
+	{
+		return false;
+	}
 	return true;
 }

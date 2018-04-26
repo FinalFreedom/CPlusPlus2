@@ -21,6 +21,7 @@
 #include "particlesystemclass.h"
 #include "RenderTextureClass.h"
 #include "ReflectionShaderClass.h"
+#include "firemodelclass.h"
 
 /////////////
 // GLOBALS //
@@ -66,7 +67,7 @@ private:
 	CameraClass* m_Camera;
 	LightClass* m_Light;
 	ModelClass* m_MoonOrbit;
-	ModelClass* m_DeathStar;
+	FireModelClass* m_DeathStar;
 	BumpModelClass* m_CWShipOrbit;
 	BumpModelClass* m_ACWShipOrbit;
 	ModelClass* m_PlanetOrbit;

@@ -16,6 +16,8 @@
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="DDSTextureLoader.h" />
+    <ClInclude Include="firemodelclass.h" />
+    <ClInclude Include="fireshaderclass.h" />
     <ClInclude Include="graphicsclass.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
@@ -40,6 +42,8 @@
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
+    <ClCompile Include="firemodelclass.cpp" />
+    <ClCompile Include="fireshaderclass.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="lightclass.cpp" />
@@ -62,6 +66,8 @@
     <None Include="bumpmap.ps" />
     <None Include="bumpmap.vs" />
     <None Include="ClassDiagram.cd" />
+    <None Include="fire.ps" />
+    <None Include="fire.vs" />
     <None Include="reflection.ps" />
     <None Include="reflection.vs" />
     <None Include="light.ps" />
