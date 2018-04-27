@@ -22,6 +22,7 @@
 #include "RenderTextureClass.h"
 #include "ReflectionShaderClass.h"
 #include "firemodelclass.h"
+#include "particlemodelclass.h"
 
 /////////////
 // GLOBALS //
@@ -71,7 +72,7 @@ private:
 	BumpModelClass* m_CWShipOrbit;
 	BumpModelClass* m_ACWShipOrbit;
 	ModelClass* m_PlanetOrbit;
-	ModelClass* m_SpaceSphere;
+	ParticleModelClass* m_SpaceSphere;
 	ModelClass* m_WarpShip1;
 	ModelClass* m_WarpShip2;
 	ModelClass* m_MoonSat;

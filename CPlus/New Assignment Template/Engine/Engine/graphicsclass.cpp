@@ -241,7 +241,7 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 		return false;
 	}
 	//Create the 6th model object
-	m_SpaceSphere = new ModelClass;
+	m_SpaceSphere = new ParticleModelClass;
 	if (!m_SpaceSphere)
 	{
 		return false;
@@ -835,7 +835,7 @@ bool GraphicsClass::Render()
 
 	// Render the sixth model using the texture shader. Star skysphere
 	m_SpaceSphere->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_SpaceSphere->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_ShaderManager->RenderParticleShader(m_D3D->GetDeviceContext(), m_SpaceSphere->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_SpaceSphere->GetTexture());
 	if (!result)
 	{

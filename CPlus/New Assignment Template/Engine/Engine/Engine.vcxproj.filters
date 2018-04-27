@@ -90,6 +90,9 @@
     <ClInclude Include="firemodelclass.h">
       <Filter>U1664298Added</Filter>
     </ClInclude>
+    <ClInclude Include="particlemodelclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bumpmapshaderclass.cpp">
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="firemodelclass.cpp">
       <Filter>U1664298Added</Filter>
+    </ClCompile>
+    <ClCompile Include="particlemodelclass.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

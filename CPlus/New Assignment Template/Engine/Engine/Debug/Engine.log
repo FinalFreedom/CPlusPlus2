@@ -1,11 +1,8 @@
 ﻿  systemclass.cpp
-  shadermanagerclass.cpp
   main.cpp
-  Generating Code...
-  Compiling...
   graphicsclass.cpp
-h:\hgit\cplusplus2\cplus\new assignment template\engine\engine\graphicsclass.cpp(74): warning C4316: 'D3DClass': object allocated on the heap may not be aligned 16
-h:\hgit\cplusplus2\cplus\new assignment template\engine\engine\graphicsclass.cpp(130): warning C4316: 'CameraClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(74): warning C4316: 'D3DClass': object allocated on the heap may not be aligned 16
+d:\users\oliver\documents\github\cplusplus\cplus\new assignment template\engine\engine\graphicsclass.cpp(130): warning C4316: 'CameraClass': object allocated on the heap may not be aligned 16
   Generating Code...
-  Engine.vcxproj -> H:\HGit\CPlusPlus2\CPlus\New Assignment Template\Engine\Debug\Engine.exe
-  Engine.vcxproj -> H:\HGit\CPlusPlus2\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)
+  Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.exe
+  Engine.vcxproj -> D:\Users\Oliver\Documents\GitHub\CPlusPlus\CPlus\New Assignment Template\Engine\Debug\Engine.pdb (Full PDB)
