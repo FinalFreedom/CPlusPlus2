@@ -235,12 +235,12 @@ bool ReflectionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WC
 
 void ReflectionShaderClass::ShutdownShader()
 {
-		// Release the reflection constant buffer.
-		if (m_reflectionBuffer)
-		{
-			m_reflectionBuffer->Release();
-			m_reflectionBuffer = 0;
-		}
+	// Release the reflection constant buffer.
+	if (m_reflectionBuffer)
+	{
+		m_reflectionBuffer->Release();
+		m_reflectionBuffer = 0;
+	}
 
 	// Release the sampler state.
 	if (m_sampleState)

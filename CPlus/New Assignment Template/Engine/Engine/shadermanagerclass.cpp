@@ -104,6 +104,13 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 
 void ShaderManagerClass::Shutdown()
 {
+
+	if (m_ReflectionShader)
+	{
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
+	}
 	if (m_ParticleShader)
 	{
 		m_ParticleShader->Shutdown();
@@ -132,15 +139,13 @@ void ShaderManagerClass::Shutdown()
 		delete m_LightShader;
 		m_LightShader = 0;
 	}
-
 	// Release the texture shader object.
-	if(m_TextureShader)
+	if (m_TextureShader)
 	{
 		m_TextureShader->Shutdown();
 		delete m_TextureShader;
 		m_TextureShader = 0;
 	}
-
 	return;
 }
 
@@ -223,6 +228,19 @@ bool ShaderManagerClass::RenderParticleShader(ID3D11DeviceContext* deviceContext
 	bool result;
 
 	result = m_ParticleShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture);
+
+	if (!result)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool ShaderManagerClass::RenderReflectionShader(ID3D11DeviceContext * deviceContext, int indexCount, const XMMATRIX & worldMatrix, const XMMATRIX & viewMatrix, const XMMATRIX & projectionMatrix, ID3D11ShaderResourceView * texture, ID3D11ShaderResourceView * reflectionTexture, const XMMATRIX & reflectionMatrix)
+{
+	bool result;
+
+	result = m_ReflectionShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture,reflectionTexture,reflectionMatrix);
 
 	if (!result)
 	{

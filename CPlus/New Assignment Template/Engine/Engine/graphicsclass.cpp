@@ -36,7 +36,7 @@ GraphicsClass::GraphicsClass()
 
 	m_ParticleShader = 0;
 	m_ParticleSystem = 0;
-
+	m_TextureShader = 0;
 	m_RenderTexture = 0;
 	m_ReflectionShader = 0;
 }
@@ -328,7 +328,7 @@ bool GraphicsClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, 
 	}
 
 	// Initialize the particle system object.
-	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"../Engine/data/star.dds");
+	result = m_ParticleSystem->Initialize(m_D3D->GetDevice(), L"../Engine/data/noise01.dds");
 	if (!result)
 	{
 		return false;
@@ -418,7 +418,7 @@ void GraphicsClass::Shutdown()
 		delete m_OddOrbit;
 		m_OddOrbit = 0;
 	}
-
+	//Here is where it all goes, order has no effect
 	// Release the texture shader object.
 	if (m_TextureShader)
 	{
@@ -473,11 +473,11 @@ void GraphicsClass::Shutdown()
 	// Release the shader manager object.
 	if(m_ShaderManager)
 	{
-		m_ShaderManager->Shutdown();
-		delete m_ShaderManager;
+		//m_ShaderManager->Shutdown();
+		//delete m_ShaderManager;
 		m_ShaderManager = 0;
 	}
-	
+
 	// Release the timer object.
 	if (m_Timer)
 	{
@@ -719,21 +719,6 @@ bool GraphicsClass::Render()
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 
 
-	// Setup the rotation and translation of the first model. Background Orbiting Moon
-	worldMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	worldMatrix *= XMMatrixRotationZ(rotation/2);
-	worldMatrix *= XMMatrixRotationX(rotation/2);
-	translateMatrix = XMMatrixTranslation(((cos(rotation/4) * 20)-(sin(rotation/2)*8)), 5.0f, (sin(rotation/4)*20)-(cos(rotation/2)*7));
-	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
-
-	// Render the first model using the texture shader.
-	m_MoonOrbit->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_MoonOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-												  m_MoonOrbit->GetTexture());
-	if(!result)
-	{
-		return false;
-	}
 
 	// Setup the rotation and translation of the second model. Foreground Planet Death Star
 	m_D3D->GetWorldMatrix(worldMatrix);
@@ -760,7 +745,32 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
+	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the texture shader.
+	result = m_ParticleShader->Render(m_D3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_ParticleSystem->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
 	m_D3D->DisableAlphaBlending();
+	// Setup the rotation and translation of the first model. Background Orbiting Moon
+	worldMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
+	worldMatrix *= XMMatrixRotationZ(rotation / 2);
+	worldMatrix *= XMMatrixRotationX(rotation / 2);
+	translateMatrix = XMMatrixTranslation(((cos(rotation / 4) * 20) - (sin(rotation / 2) * 8)), 5.0f, (sin(rotation / 4) * 20) - (cos(rotation / 2) * 7));
+	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
+
+	// Render the first model using the texture shader.
+	m_MoonOrbit->Render(m_D3D->GetDeviceContext());
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_MoonOrbit->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_MoonOrbit->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
 
 	// Setup the rotation and translation of the third model. Far orbiting ship
 	m_D3D->GetWorldMatrix(worldMatrix);
@@ -830,12 +840,12 @@ bool GraphicsClass::Render()
 
 	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(-50.0f, -50.0f, -50.0f));
 	worldMatrix *= XMMatrixRotationX(90);
-	worldMatrix *= XMMatrixRotationY(rotation/50);
+	worldMatrix *= XMMatrixRotationY(rotation / 50);
 	worldMatrix *= XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 
 	// Render the sixth model using the texture shader. Star skysphere
 	m_SpaceSphere->Render(m_D3D->GetDeviceContext());
-	result = m_ShaderManager->RenderParticleShader(m_D3D->GetDeviceContext(), m_SpaceSphere->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	result = m_ShaderManager->RenderTextureShader(m_D3D->GetDeviceContext(), m_SpaceSphere->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_SpaceSphere->GetTexture());
 	if (!result)
 	{
@@ -911,9 +921,12 @@ bool GraphicsClass::Render()
 	{
 		return false;
 	}
-	// Turn on alpha blending.
+	/**
+	// Causes 
 	m_D3D->EnableAlphaBlending();
-
+	m_D3D->GetWorldMatrix(worldMatrix);
+	worldMatrix = XMMatrixMultiply(worldMatrix, XMMatrixScaling(0.50f, 0.50f, 0.50f));
+	worldMatrix *= XMMatrixTranslation(0, 0, 0);
 	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_ParticleSystem->Render(m_D3D->GetDeviceContext());
 
@@ -927,7 +940,7 @@ bool GraphicsClass::Render()
 
 	// Turn off alpha blending.
 	m_D3D->DisableAlphaBlending();
-
+	**/
 	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 

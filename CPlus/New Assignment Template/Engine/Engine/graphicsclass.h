@@ -80,7 +80,6 @@ private:
 
 	RenderTextureClass* m_RenderTexture;
 	TextureShaderClass* m_TextureShader;
-
 	ParticleShaderClass* m_ParticleShader;
 	particlesystemclass* m_ParticleSystem;
 	ReflectionShaderClass* m_ReflectionShader;
